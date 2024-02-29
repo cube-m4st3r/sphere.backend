@@ -2,15 +2,22 @@
 // src/Controller/NASAController.php
 namespace App\Controller;
 
+use App\Entity\NasaAPODPost;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use GuzzleHttp\Client;
 use Symfony\Component\Routing\Annotation\Route;
+use DateTime;
+use App\Repository\NasaAPODPostRepository;
+use App\Service\NasaAPODPostService;
+
 
 class NASAController extends AbstractController
 {
-    #[Route('/nasa/apod')]
-    public function index(): Response
+    #[Route('/nasa/apod/get_latest_post', name: 'get_latest_post')]
+    public function getLatestPost(EntityManagerInterface $entityManager, NasaAPODPostRepository $repository,
+    NasaAPODPostService $nasaAPODPostService): Response
     {
         $config = [
             'verify' => __DIR__ . '/cacert.pem',
@@ -25,6 +32,25 @@ class NASAController extends AbstractController
         ]);
 
         $data = json_decode($response->getBody(), true);
+        $earliestEntity = $repository->findEarliestDateEntity();
+
+        if ($earliestEntity !== null) // if there are no datasets in the DB
+        {
+            $date = DateTime::createFromFormat('Y-m-d', $earliestEntity->getDate());
+            if (!$date) {
+                // Handle invalid date format
+                throw new \InvalidArgumentException('Invalid date format');
+            }
+
+            if (new DateTime('today') > $date)
+            {
+                $nasaAPODPostService->addToDB($data);
+            }
+        } 
+        else 
+        {
+            $nasaAPODPostService->addToDB($data);
+        }
 
         return $this->json($data);
     }
