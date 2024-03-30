@@ -1,5 +1,12 @@
-controllers:
+base_controller:
     resource:
-        path: ../src/Controller/
-        namespace: App\Controller
+        path: ../src/Controller/Base
+        namespace: App\Controller\Base
     type: attribute
+
+ffxiv_controller:
+    resource:
+        path: ../src/Controller/FFXIV
+        namespace: App\Controller\FFXIV
+    type: attribute
+
