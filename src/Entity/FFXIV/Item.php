@@ -16,11 +16,14 @@ class Item
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
+    #[ORM\Column(length: 999, nullable: true)]
     private ?string $description = null;
 
     #[ORM\Column]
     private ?bool $isCollectable = null;
+
+    #[ORM\Column]
+    private ?bool $CanBeHQ = null;
 
     public function getId(): ?int
     {
@@ -66,6 +69,18 @@ class Item
     public function setIsCollectable(bool $isCollectable): static
     {
         $this->isCollectable = $isCollectable;
+
+        return $this;
+    }
+
+    public function isCanBeHQ(): ?bool
+    {
+        return $this->CanBeHQ;
+    }
+
+    public function setCanBeHQ(bool $CanBeHQ): static
+    {
+        $this->CanBeHQ = $CanBeHQ;
 
         return $this;
     }

@@ -56,33 +56,24 @@ class CGOrderController extends AbstractController
             'world' => $characterData['world']
         ]);
 
-        // If PlayableCharacter not found, create a new one
         if (!$character) {
             $character = new PlayableCharacter();
-            // Set PlayableCharacter data from JSON
-            // Assuming the JSON data contains all necessary information to create a new PlayableCharacter
             $character->setName($characterData['name']);
             $character->setLastName($characterData['last_name']);
             $character->setLodestoneUrl($characterData['lodestone_url'] ?? null);
             $character->setWorld($characterData['world']);
-            // Persist the new PlayableCharacter
             $entityManager->persist($character);
         }
 
-        // Retrieve data for DiscordUser from JSON
         $discordUserData = $jsonData['DiscordUser'];
         $discordUserRepository = $entityManager->getRepository(DiscordUser::class);
         $discordUser = $discordUserRepository->findOneBy([
             'username' => $discordUserData['username']
         ]);
 
-        // If DiscordUser not found, create a new one
         if (!$discordUser) {
             $discordUser = new DiscordUser();
-            // Set DiscordUser data from JSON
-            // Assuming the JSON data contains all necessary information to create a new DiscordUser
             $discordUser->setUsername($discordUserData['username']);
-            // Persist the new DiscordUser
             $entityManager->persist($discordUser);
         }
 
@@ -104,17 +95,14 @@ class CGOrderController extends AbstractController
             $customer->setDiscordInfo($discordUser);
         }
 
-        // Link entities together
         $cgOrder->setCustomer($customer);
 
         foreach ($jsonData['CGOrderItem'] as $itemData) {
             $item = new Item();
-            // Extract data for Item
             $itemInfo = $itemData['Item'];
 
             $itemRepository = $entityManager->getRepository(Item::class);
             $item = $itemRepository->findOneBy([
-                'id' => $itemInfo['id'],
                 'name' => $itemInfo['name']
             ]);
 
@@ -131,24 +119,19 @@ class CGOrderController extends AbstractController
             $cgOrderItem->addItem($item);
             $cgOrderItem->addCGOrder($cgOrder);
 
-            // Persist CGOrderItem to the database
             $entityManager->persist($cgOrderItem);
         }
 
-        // Persist CGOrder to the database
         $entityManager->persist($cgOrder);
         $entityManager->flush();
 
-        // Return a JSON response indicating success
         return $this->json([
             'message' => 'CGOrder created successfully',
             'id' => $cgOrder->getId(),
         ]);
         
         $cgOrderItem->addCGOrder($cgOrder);
-        // Assuming you have relationships set up correctly between entities
-
-        // Persist entities to the database
+    
         $entityManager = $this->doctrine->getManager('ffxiv');
         $entityManager->persist($character);
         $entityManager->persist($item);
@@ -157,7 +140,6 @@ class CGOrderController extends AbstractController
         $entityManager->persist($cgOrder);
         $entityManager->flush();
 
-        // Return a JSON response indicating success
         return $this->json([
             'message' => 'CGOrder created successfully',
             'id' => $cgOrder->getId(),
@@ -208,6 +190,7 @@ class CGOrderController extends AbstractController
                 'name' => $item->getName(),
                 'description' => $item->getDescription(),
                 'isCollectable' => $item->isIsCollectable(),
+                'CanBeHQ' => $item->isCanBeHQ()
             ];
 
             $serializedCgOrderItems[] = [
@@ -234,24 +217,5 @@ class CGOrderController extends AbstractController
         );
 
         return $serializedData;
-    }
-
-    #[Route('/get_cgorder_items/{id}', name: 'get_cgorder_items', methods: ['GET'])]
-    public function getCGOrderItems(int $id, SerializerInterface $serializer): JsonResponse
-    {
-        $encoders = [new JsonEncoder()];
-        $normalizers = [$this->normalizer];
-        $serializer = new Serializer($normalizers, $encoders);
-
-        $entityManager = $this->doctrine->getManager('ffxiv');
-        $cgOrderItem = $entityManager->getRepository(CGOrderItem::class)->find($id);
-
-        if (!$cgOrderItem) {
-            return new JsonResponse(['message' => 'CGOrderItem not found'], 404);
-        }
-
-        $jsonContent = $serializer->serialize($cgOrderItem, 'json');
-
-        return new JsonResponse($jsonContent, 200, [], true);
     }
 }
