@@ -25,6 +25,29 @@ services:
     # please note that last definitions always *replace* previous ones
 
     Symfony\Component\Serializer\SerializerInterface: '@serializer'
-    Symfony\Component\Serializer\Normalizer\ObjectNormalizer:
+    Symfony\Component\Serializer\Serializer:
         arguments:
-            $propertyAccessor: '@property_accessor'
+            $normalizers: ['@serializer.normalizer.object']
+            $encoders: ['@serializer.encoder.json']
+
+    App\Service\FFXIV\ItemService:
+        arguments:
+            $entityManager: '@doctrine.orm.ffxiv_entity_manager'
+
+    App\Service\FFXIV\PlayableCharacterService:
+        class: App\Service\FFXIV\PlayableCharacterService
+        autowire: true
+        arguments:
+            $entityManager: '@doctrine.orm.ffxiv_entity_manager'
+
+    App\Service\FFXIV\DiscordUserService:
+        class: App\Service\FFXIV\DiscordUserService
+        autowire: true
+        arguments:
+            $entityManager: '@doctrine.orm.ffxiv_entity_manager'
+
+    App\Service\FFXIV\CustomerService:
+        class: App\Service\FFXIV\CustomerService
+        autowire: true
+        arguments:
+            $entityManager: '@doctrine.orm.ffxiv_entity_manager'
