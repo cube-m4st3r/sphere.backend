@@ -51,3 +51,9 @@ services:
         autowire: true
         arguments:
             $entityManager: '@doctrine.orm.ffxiv_entity_manager'
+
+    App\Service\FFXIV\VislandService:
+        class: App\Service\FFXIV\VislandService
+        autowire: true
+        arguments:
+            $entityManager: '@doctrine.orm.ffxiv_entity_manager'

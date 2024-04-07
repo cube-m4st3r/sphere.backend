@@ -3,6 +3,8 @@
 namespace App\Entity\FFXIV;
 
 use App\Repository\FFXIV\ItemRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ItemRepository::class)]
@@ -24,6 +26,14 @@ class Item
 
     #[ORM\Column]
     private ?bool $CanBeHQ = null;
+
+    #[ORM\OneToMany(targetEntity: VislandRouteItem::class, mappedBy: 'Item_id')]
+    private Collection $VislandRouteItem_id;
+
+    public function __construct()
+    {
+        $this->VislandRouteItem_id = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -81,6 +91,36 @@ class Item
     public function setCanBeHQ(bool $CanBeHQ): static
     {
         $this->CanBeHQ = $CanBeHQ;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, VislandRouteItem>
+     */
+    public function getVislandRouteItemId(): Collection
+    {
+        return $this->VislandRouteItem;
+    }
+
+    public function addVislandRouteItemId(VislandRouteItem $vislandRouteItemId): static
+    {
+        if (!$this->VislandRouteItem->contains($vislandRouteItemId)) {
+            $this->VislandRouteItem->add($vislandRouteItemId);
+            $vislandRouteItemId->setItemId($this);
+        }
+
+        return $this;
+    }
+
+    public function removeVislandRouteItemId(VislandRouteItem $vislandRouteItemId): static
+    {
+        if ($this->VislandRouteItem->removeElement($vislandRouteItemId)) {
+            // set the owning side to null (unless already changed)
+            if ($vislandRouteItemId->getItemId() === $this) {
+                $vislandRouteItemId->setItemId(null);
+            }
+        }
 
         return $this;
     }
