@@ -33,17 +33,20 @@ class VislandRoute
 
     #[ORM\OneToOne(cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(nullable: false)]
-    private ?DiscordUser $creatorID = null;
+    private ?DiscordUser $creator = null;
 
     #[ORM\OneToOne(cascade: ['persist', 'remove'])]
-    private ?DiscordUser $updaterID = null;
+    private ?DiscordUser $updater = null;
 
     #[ORM\OneToMany(targetEntity: VislandRouteItem::class, mappedBy: 'Route_id')]
     private Collection $VislandRouteItem;
 
+    #[ORM\Column(type: Types::TEXT)]
+    private ?string $routeCode = null;
+
     public function __construct()
     {
-        $this->Item_id = new ArrayCollection();
+        $this->Item = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -111,26 +114,26 @@ class VislandRoute
         return $this;
     }
 
-    public function getCreatorID(): ?DiscordUser
+    public function getCreator(): ?DiscordUser
     {
-        return $this->creatorID;
+        return $this->creator;
     }
 
-    public function setCreatorID(DiscordUser $creatorID): static
+    public function setCreator(DiscordUser $creator): static
     {
-        $this->creatorID = $creatorID;
+        $this->creator = $creator;
 
         return $this;
     }
 
-    public function getUpdaterID(): ?DiscordUser
+    public function getUpdater(): ?DiscordUser
     {
-        return $this->updaterID;
+        return $this->updater;
     }
 
-    public function setUpdaterID(?DiscordUser $updaterID): static
+    public function setUpdater(?DiscordUser $updater): static
     {
-        $this->updaterID = $updaterID;
+        $this->updater = $updater;
 
         return $this;
     }
@@ -138,29 +141,41 @@ class VislandRoute
     /**
      * @return Collection<int, VislandRouteItem>
      */
-    public function getVislandRouteItemId(): Collection
+    public function getVislandRouteItem(): Collection
     {
         return $this->VislandRouteItem;
     }
 
-    public function addVislandRouteItemId(VislandRouteItem $vislandrouteitemId): static
+    public function addVislandRouteItem(VislandRouteItem $vislandrouteitem): static
     {
-        if (!$this->VislandRouteItem->contains($vislandrouteitemId)) {
-            $this->VislandRouteItem->add($vislandrouteitemId);
-            $vislandrouteitemId->setRouteId($this);
+        if (!$this->VislandRouteItem->contains($vislandrouteitem)) {
+            $this->VislandRouteItem->add($vislandrouteitem);
+            $vislandrouteitem->setRouteId($this);
         }
 
         return $this;
     }
 
-    public function removeItemId(VislandRouteItem $vislandrouteitemId): static
+    public function removeItem(VislandRouteItem $vislandrouteitem): static
     {
-        if ($this->VislandRouteItem->removeElement($vislandrouteitemId)) {
+        if ($this->VislandRouteItem->removeElement($vislandrouteitem)) {
             // set the owning side to null (unless already changed)
-            if ($vislandrouteitemId->getRouteId() === $this) {
-                $vislandrouteitemId->setRouteId(null);
+            if ($vislandrouteitem->getRouteId() === $this) {
+                $vislandrouteitem->setRouteId(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getRouteCode(): ?string
+    {
+        return $this->routeCode;
+    }
+
+    public function setRouteCode(string $routeCode): static
+    {
+        $this->routeCode = $routeCode;
 
         return $this;
     }
