@@ -1,9 +1,9 @@
 <?php
 // src/Service/NasaAPODPostService.php
 
-namespace App\Service;
+namespace App\Service\Base;
 
-use App\Entity\NasaAPODPost;
+use App\Entity\Base\NasaAPODPost;
 use Doctrine\ORM\EntityManagerInterface;
 
 class NasaAPODPostService

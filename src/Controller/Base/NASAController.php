@@ -1,16 +1,16 @@
 <?php
 // src/Controller/NASAController.php
-namespace App\Controller;
+namespace App\Controller\Base;
 
-use App\Entity\NasaAPODPost;
+use App\Entity\Base\NasaAPODPost;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use GuzzleHttp\Client;
 use Symfony\Component\Routing\Annotation\Route;
 use DateTime;
-use App\Repository\NasaAPODPostRepository;
-use App\Service\NasaAPODPostService;
+use App\Repository\Base\NasaAPODPostRepository;
+use App\Service\Base\NasaAPODPostService;
 
 
 class NASAController extends AbstractController
@@ -20,7 +20,7 @@ class NASAController extends AbstractController
     NasaAPODPostService $nasaAPODPostService): Response
     {
         $config = [
-            'verify' => __DIR__ . '/cacert.pem',
+            'verify' => __DIR__ . '/../cacert.pem',
         ];
 
         $client = new Client($config);

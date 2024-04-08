@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Entity;
+namespace App\Entity\Base;
 
 use App\Repository\NasaAPODPostRepository;
 use Doctrine\ORM\Mapping as ORM;
