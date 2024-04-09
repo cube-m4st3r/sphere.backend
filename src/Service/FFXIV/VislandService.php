@@ -27,7 +27,7 @@ class VislandService
     }
 
     public function serialize_vislandroute(VislandRoute $route): array
-{
+    {
         // Serialize the main route object
         $serializedRoute = [
             'id' => $route->getId(),
@@ -78,7 +78,6 @@ class VislandService
         $route = new VislandRoute();
         $route->setName($routeData['name']);
         $route->setSteps($routeData['steps']);
-        $route->setPasteBinLink($routeData['pasteBinLink']);
         
         // Convert createdAt and lastUpdatedAt to DateTimeImmutable
         $createdAt = new \DateTimeImmutable($routeData['createdAt']);
@@ -118,6 +117,8 @@ class VislandService
 
         // Set the route code
         $route->setRouteCode($routeData['routeCode']);
+        $pastebinlink = $this->pasteBinService->create_paste($routeData['routeCode']);
+        $route->setPasteBinLink($pastebinlink);
 
         // Loop through VislandRouteItems in routeData and associate them with the route
         foreach ($routeData['VislandRouteItems'] as $routeItemData) {

@@ -1,16 +1,16 @@
 <?php
 
 namespace App\Service\Base;
+use GuzzleHttp\Client;
 
 class PasteBinService
 {
-    private function create_paste($textToUpload){
+    public function create_paste($textToUpload){
         $config = [
-            'verify' => __DIR__ . '/../cacert.pem',
+            'verify' => __DIR__ . '/cacert.pem',
         ];
     
         $apiKey = $_ENV['PASTEBIN_API_KEY'];
-        $textToUpload = 'testpaste';
     
         $client = new Client($config);
         $response = $client->request('POST', 'https://pastebin.com/api/api_post.php', [
@@ -22,8 +22,6 @@ class PasteBinService
             ]
         ]);
     
-        $pasteUrl = $response->getBody()->getContents();
-    
-        return new Response($pasteUrl);
+        return $pasteUrl = $response->getBody()->getContents();
     }
 }
