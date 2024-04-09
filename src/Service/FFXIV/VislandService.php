@@ -13,23 +13,41 @@ use App\Service\Base\PasteBinService;
 class VislandService
 {
     private $pasteBinService;
+    private $discordUserService;
     private $serializer;
     private $entityManager;
 
     public function __construct(
         SerializerInterface $serializer,
         EntityManagerInterface $entityManager,
-        PasteBinService $pasteBinService
+        PasteBinService $pasteBinService,
+        DiscordUserService $discordUserService
         )
     {
         $this->serializer = $serializer;
         $this->entityManager = $entityManager;
         $this->pasteBinService = $pasteBinService;
+        $this->discordUserService = $discordUserService;
     }
 
     public function serialize_vislandroute(VislandRoute $route): array
     {
-        // Serialize the main route object
+        $creator = $this->entityManager->getRepository(DiscordUser::class)
+        ->findOneBy([
+            'id' => $route->getCreator()->getId(),
+            'username' => $route->getCreator()->getUsername()
+        ]);
+
+        $updater = $this->entityManager->getRepository(DiscordUser::class)
+        ->findOneBy([
+            'id' => $route->getCreator()->getId(),
+            'username' => $route->getCreator()->getUsername()
+        ]);
+
+        $creatorSerialized = $this->discordUserService->serialize_discorduser($creator);
+        $updaterSerialized = $this->discordUserService->serialize_discorduser($updater);
+
+        // serialize the main route object
         $serializedRoute = [
             'id' => $route->getId(),
             'name' => $route->getName(),
@@ -37,8 +55,8 @@ class VislandService
             'pasteBinLink' => $route->getPastebinlink(),
             'createdAt' => $route->getCreatedAt(),
             'lastUpdatedAt' => $route->getLastUpdatedAt(),
-            'creator' => $route->getCreator(),
-            'updater' => $route->getUpdater(),
+            'creator' => $creatorSerialized,
+            'updater' => $updaterSerialized,
             'code' => $route->getRouteCode(),
         ];
 
