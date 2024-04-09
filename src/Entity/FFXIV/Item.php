@@ -27,12 +27,12 @@ class Item
     #[ORM\Column]
     private ?bool $CanBeHQ = null;
 
-    #[ORM\OneToMany(targetEntity: VislandRouteItem::class, mappedBy: 'Item_id')]
-    private Collection $VislandRouteItem_id;
+    #[ORM\OneToMany(targetEntity: VislandRouteItem::class, mappedBy: 'Item')]
+    private Collection $VislandRouteItem;
 
     public function __construct()
     {
-        $this->VislandRouteItem_id = new ArrayCollection();
+        $this->VislandRouteItem = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -98,27 +98,27 @@ class Item
     /**
      * @return Collection<int, VislandRouteItem>
      */
-    public function getVislandRouteItemId(): Collection
+    public function getVislandRouteItem(): Collection
     {
         return $this->VislandRouteItem;
     }
 
-    public function addVislandRouteItemId(VislandRouteItem $vislandRouteItemId): static
+    public function addVislandRouteItem(VislandRouteItem $vislandRouteItem): static
     {
-        if (!$this->VislandRouteItem->contains($vislandRouteItemId)) {
-            $this->VislandRouteItem->add($vislandRouteItemId);
-            $vislandRouteItemId->setItemId($this);
+        if (!$this->VislandRouteItem->contains($vislandRouteItem)) {
+            $this->VislandRouteItem->add($vislandRouteItem);
+            $vislandRouteItem->setItem($this);
         }
 
         return $this;
     }
 
-    public function removeVislandRouteItemId(VislandRouteItem $vislandRouteItemId): static
+    public function removeVislandRouteItem(VislandRouteItem $vislandRouteItem): static
     {
-        if ($this->VislandRouteItem->removeElement($vislandRouteItemId)) {
+        if ($this->VislandRouteItem->removeElement($vislandRouteItem)) {
             // set the owning side to null (unless already changed)
-            if ($vislandRouteItemId->getItemId() === $this) {
-                $vislandRouteItemId->setItemId(null);
+            if ($vislandRouteItem->getItem() === $this) {
+                $vislandRouteItem->setItem(null);
             }
         }
 

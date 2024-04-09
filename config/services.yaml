@@ -64,6 +64,7 @@ services:
         class: App\Controller\FFXIV\VislandController
         arguments:
             $vislandService: '@App\Service\FFXIV\VislandService'
+            $entityManager: '@doctrine.orm.ffxiv_entity_manager'
         autowire: true
         tags: ['controller.service_arguments']
 

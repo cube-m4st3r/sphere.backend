@@ -19,7 +19,8 @@ class VislandService
     public function __construct(
         SerializerInterface $serializer,
         EntityManagerInterface $entityManager,
-        PasteBinService $pasteBinService)
+        PasteBinService $pasteBinService
+        )
     {
         $this->serializer = $serializer;
         $this->entityManager = $entityManager;
