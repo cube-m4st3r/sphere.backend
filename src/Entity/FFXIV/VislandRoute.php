@@ -38,7 +38,7 @@ class VislandRoute
     #[ORM\OneToOne(cascade: ['persist', 'remove'])]
     private ?DiscordUser $updater = null;
 
-    #[ORM\OneToMany(targetEntity: VislandRouteItem::class, mappedBy: 'Route_id')]
+    #[ORM\OneToMany(targetEntity: VislandRouteItem::class, mappedBy: 'Route')]
     private Collection $VislandRouteItem;
 
     #[ORM\Column(type: Types::TEXT)]
