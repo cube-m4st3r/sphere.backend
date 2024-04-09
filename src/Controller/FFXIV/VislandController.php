@@ -7,6 +7,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\HttpFoundation\Request;
 use App\Service\FFXIV\VislandService;
+use App\Repository\FFXIV\VislandRouteRepository;
 
 #[Route('/ffxiv')]
 class VislandController extends AbstractController
@@ -19,7 +20,7 @@ class VislandController extends AbstractController
         $this->vislandService = $vislandService;
     }
 
-    #[Route('/visland/add', name: 'add_visland_route', methods: ['POST'])]
+    #[Route('/visland/route/add', name: 'add_visland_route', methods: ['POST'])]
     public function add_visland_route(Request $request): JsonResponse
     {
         $jsonData = json_decode($request->getContent(), true);
@@ -32,9 +33,17 @@ class VislandController extends AbstractController
         ]);
     }
 
-    #[Route('visland/route/{id}', name: 'get_route_data', methods: ['GET'])]
-    public function get_visland_route(): JsonResponse
+    #[Route('/visland/route/{id}', name: 'get_route_data', methods: ['GET'])]
+    public function get_visland_route(int $id, VislandRouteRepository $vislandRouteRepository): JsonResponse
     {
+        $vislandRoute = $vislandRouteRepository->find($id);
 
+        if (!$vislandRoute)
+        {
+            return new JsonResponse(['message' => 'VislandRoute unavailable/not found.', 404]);
+        }
+
+        $serializedData = $this->vislandService->serialize_vislandroute($vislandRoute);
+        return new JsonResponse($serializedData);
     }
 }

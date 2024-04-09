@@ -38,7 +38,7 @@ class VislandService
             'lastUpdatedAt' => $route->getLastUpdatedAt(),
             'creator' => $route->getCreator(),
             'updater' => $route->getUpdater(),
-            'code' => $route->getCode(),
+            'code' => $route->getRouteCode(),
         ];
 
         // Serialize each VislandRouteItem associated with the route
