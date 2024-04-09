@@ -31,7 +31,7 @@ class VislandRouteItem
         return $this->Route;
     }
 
-    public function setRoute(?VislandRoute $Route_id): static
+    public function setRoute(?VislandRoute $Route): static
     {
         $this->Route = $Route;
 

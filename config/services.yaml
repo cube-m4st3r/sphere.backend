@@ -56,7 +56,16 @@ services:
         class: App\Service\FFXIV\VislandService
         autowire: true
         arguments:
+            $serializer: '@serializer'
             $entityManager: '@doctrine.orm.ffxiv_entity_manager'
+            $pasteBinService: '@App\Service\Base\PasteBinService'
+
+    App\Controller\FFXIV\VislandController:
+        class: App\Controller\FFXIV\VislandController
+        arguments:
+            $vislandService: '@App\Service\FFXIV\VislandService'
+        autowire: true
+        tags: ['controller.service_arguments']
 
     App\Service\Base\PasteBinService:
         class: App\Service\Base\PasteBinService

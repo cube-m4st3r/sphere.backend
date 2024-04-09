@@ -150,18 +150,18 @@ class VislandRoute
     {
         if (!$this->VislandRouteItem->contains($vislandrouteitem)) {
             $this->VislandRouteItem->add($vislandrouteitem);
-            $vislandrouteitem->setRouteId($this);
+            $vislandrouteitem->setRoute($this);
         }
 
         return $this;
     }
 
-    public function removeItem(VislandRouteItem $vislandrouteitem): static
+    public function removeVislandRouteItem(VislandRouteItem $vislandrouteitem): static
     {
         if ($this->VislandRouteItem->removeElement($vislandrouteitem)) {
             // set the owning side to null (unless already changed)
-            if ($vislandrouteitem->getRouteId() === $this) {
-                $vislandrouteitem->setRouteId(null);
+            if ($vislandrouteitem->getRoute() === $this) {
+                $vislandrouteitem->setRoute(null);
             }
         }
 
