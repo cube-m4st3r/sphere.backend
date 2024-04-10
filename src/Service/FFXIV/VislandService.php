@@ -112,58 +112,46 @@ class VislandService
 
         // Check if the creator exists
         if ($creator instanceof DiscordUser) {
-            // Set the creator for the VislandRoute entity
+
             $route->setCreator($creator);
         } else {
-            // Handle the case where the creator is not found (e.g., throw an exception)
             throw new \Exception('Creator not found');
         }
 
-        // Retrieve the DiscordUser entity for the updater
         $updater = $this->entityManager->getRepository(DiscordUser::class)
         ->findOneBy([
             'username' => $routeData['updater']
         ]);
 
-        // Check if the updater exists
+        
         if ($updater instanceof DiscordUser) {
-            // Set the updater for the VislandRoute entity
             $route->setUpdater($updater);
         } else {
-            // Handle the case where the updater is not found (e.g., throw an exception)
             throw new \Exception('Updater not found');
         }
 
-        // Set the route code
         $route->setRouteCode($routeData['routeCode']);
-        $pastebinlink = $this->pasteBinService->create_paste($routeData['routeCode']);
+        $pastebinlink = $this->pasteBinService->create_paste($routeData['routeCode'], "N");
         $route->setPasteBinLink($pastebinlink);
 
-        // Loop through VislandRouteItems in routeData and associate them with the route
         foreach ($routeData['VislandRouteItems'] as $routeItemData) {
             $itemName = $routeItemData['Item']['name'];
 
-            // Find or create the item entity
             $item = $this->entityManager->getRepository(Item::class)
                 ->findOneBy(['name' => $itemName]);
 
             if (!$item) {
-                // Create a new item entity if it doesn't exist
                 $item = new Item();
                 $item->setName($itemName);
-                // Set any other properties of the item entity if needed
-                // $item->setProperty($routeItemData['Item']['property']);
                 $this->entityManager->persist($item);
             }
 
-            // Create a new VislandRouteItem entity and associate it with the route and item
             $routeItem = new VislandRouteItem();
             $routeItem->setRoute($route);
             $routeItem->setItem($item);
             $this->entityManager->persist($routeItem);
         }
 
-        // Persist the route and associated items
         $this->entityManager->persist($route);
         $this->entityManager->flush();
 
