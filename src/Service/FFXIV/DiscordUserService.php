@@ -25,6 +25,7 @@ class DiscordUserService
         return [
             'id' => $user->getId(),
             'username' => $user->getUsername(),
+            'avatarUrl' => $user->getAvatarUrl()
         ];
     }
 
@@ -50,6 +51,7 @@ class DiscordUserService
 
         $user = new DiscordUser();
         $user->setUsername($data['username']);
+        $user->setAvatarUrl($data['avatarUrl']);
 
         $this->entityManager->persist($user);
         $this->entityManager->flush();
