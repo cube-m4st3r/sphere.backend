@@ -59,6 +59,7 @@ services:
             $serializer: '@serializer'
             $entityManager: '@doctrine.orm.ffxiv_entity_manager'
             $pasteBinService: '@App\Service\Base\PasteBinService'
+            $discordUserService: '@App\Service\FFXIV\DiscordUserService'
 
     App\Controller\FFXIV\VislandController:
         class: App\Controller\FFXIV\VislandController
