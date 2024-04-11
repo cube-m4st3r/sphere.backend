@@ -31,11 +31,11 @@ class VislandRoute
     #[ORM\Column]
     private ?\DateTimeImmutable $last_updated_at = null;
 
-    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
+    #[ORM\ManyToOne(targetEntity: DiscordUser::class)]
     #[ORM\JoinColumn(nullable: false)]
     private ?DiscordUser $creator = null;
 
-    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
+    #[ORM\ManyToOne(targetEntity: DiscordUser::class)]
     private ?DiscordUser $updater = null;
 
     #[ORM\OneToMany(targetEntity: VislandRouteItem::class, mappedBy: 'Route')]

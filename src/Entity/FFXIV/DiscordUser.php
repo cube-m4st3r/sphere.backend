@@ -19,6 +19,18 @@ class DiscordUser
     #[ORM\Column(length: 255)]
     private ?string $avatarUrl = null;
 
+    #[ORM\OneToMany(targetEntity: VislandRoute::class, mappedBy: 'creator')]
+    private $createdRoutes;
+
+    #[ORM\OneToMany(targetEntity: VislandRoute::class, mappedBy: 'updater')]
+    private $updatedRoutes;
+
+    public function __construct()
+    {
+        $this->createdRoutes = new ArrayCollection();
+        $this->updatedRoutes = new ArrayCollection();
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -53,5 +65,21 @@ class DiscordUser
         $this->avatarUrl = $avatarUrl;
 
         return $this;
+    }
+
+    /**
+     * @return Collection|VislandRoute[]
+     */
+    public function getCreatedRoutes(): Collection
+    {
+        return $this->createdRoutes;
+    }
+
+    /**
+     * @return Collection|VislandRoute[]
+     */
+    public function getUpdatedRoutes(): Collection
+    {
+        return $this->updatedRoutes;
     }
 }

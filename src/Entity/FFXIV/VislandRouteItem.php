@@ -13,11 +13,11 @@ class VislandRouteItem
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\ManyToOne(inversedBy: 'Item_id')]
+    #[ORM\ManyToOne(inversedBy: 'Route_id')]
     #[ORM\JoinColumn(nullable: false)]
     private ?VislandRoute $Route = null;
 
-    #[ORM\ManyToOne(inversedBy: 'VislandRouteItem_id')]
+    #[ORM\ManyToOne(inversedBy: 'Item_id')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Item $Item = null;
 

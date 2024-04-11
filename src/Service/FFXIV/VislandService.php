@@ -62,7 +62,8 @@ class VislandService
 
         // Serialize each VislandRouteItem associated with the route
         $serializedVislandRouteItems = [];
-        foreach ($route->getVislandRouteItem() as $vislandRouteItem) {
+        $routeItems = $route->getVislandRouteItem();
+        foreach ($routeItems as $vislandRouteItem) {
             $serializedItem = $this->serialize_vislandrouteitem($vislandRouteItem->getItem());
             $serializedVislandRouteItems[] = [
                 'Item' => $serializedItem
@@ -130,9 +131,7 @@ class VislandService
             throw new \Exception('Updater not found');
         }
 
-        $route->setRouteCode($routeData['routeCode']);
-        $pastebinlink = $this->pasteBinService->create_paste($routeData['routeCode'], "N");
-        $route->setPasteBinLink($pastebinlink);
+        $route->setRouteCode($routeData['code']);
 
         foreach ($routeData['VislandRouteItems'] as $routeItemData) {
             $itemName = $routeItemData['Item']['name'];
@@ -151,6 +150,11 @@ class VislandService
             $routeItem->setItem($item);
             $this->entityManager->persist($routeItem);
         }
+
+        //$pastebinlink = $this->pasteBinService->create_paste($routeData['code'], "N");
+        $pastebinlink = "TEMP";
+        $route->setPasteBinLink($pastebinlink);
+
 
         $this->entityManager->persist($route);
         $this->entityManager->flush();
