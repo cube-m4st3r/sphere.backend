@@ -31,6 +31,8 @@ services:
             $encoders: ['@serializer.encoder.json']
 
     App\Service\FFXIV\ItemService:
+        class: App\Service\FFXIV\ItemService
+        autowire: true
         arguments:
             $entityManager: '@doctrine.orm.ffxiv_entity_manager'
 
@@ -56,7 +58,6 @@ services:
         class: App\Service\FFXIV\VislandService
         autowire: true
         arguments:
-            $serializer: '@serializer'
             $entityManager: '@doctrine.orm.ffxiv_entity_manager'
             $pasteBinService: '@App\Service\Base\PasteBinService'
             $discordUserService: '@App\Service\FFXIV\DiscordUserService'
@@ -68,7 +69,19 @@ services:
             $entityManager: '@doctrine.orm.ffxiv_entity_manager'
         autowire: true
         tags: ['controller.service_arguments']
+    
+    App\Service\FFXIV\CGOrderService:
+        class: App\Service\FFXIV\CGOrderService
+        arguments:
+            $entityManager: '@doctrine.orm.ffxiv_entity_manager'
+            $discordUserService: '@App\Service\FFXIV\DiscordUserService'
+            $playableCharacterService: '@App\Service\FFXIV\PlayableCharacterService'
+        autowire: true
 
     App\Service\Base\PasteBinService:
         class: App\Service\Base\PasteBinService
+        autowire: true
+
+    App\Service\Anime\AnimeExtAPIService:
+        class: App\Service\Anime\AnimeExtAPIService
         autowire: true

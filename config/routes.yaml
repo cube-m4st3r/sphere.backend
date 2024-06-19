@@ -10,3 +10,14 @@ ffxiv_controller:
         namespace: App\Controller\FFXIV
     type: attribute
 
+anime_controller:
+    resource: 
+        path: ../src/Controller/Anime
+        namespace: App\Controller\Anime
+    type: attribute
+
+leagueoflegends_controller:
+    resource:
+        path: ../src/Controller/LeagueOfLegends
+        namespace: App\Controller\LeagueOfLegends
+    type: attribute

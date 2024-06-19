@@ -7,6 +7,12 @@ doctrine:
             ffxiv:
                 # FFXIV-related database connection configuration
                 url: '%env(resolve:FFXIV_DATABASE_URL)%'
+            anime: 
+                # Anime database connection configuration
+                url: '%env(resolve:ANIME_DATABASE_URL)%'
+            leagueoflegends:
+                # League Of Legends database connection configuration
+                url: '%env(resolve:LEAGUEOFLEGENDS_DATABASE_URL)%'
         default_connection: default
     orm:
         default_entity_manager: default
@@ -27,6 +33,22 @@ doctrine:
                         dir: '%kernel.project_dir%/src/Entity/FFXIV'
                         prefix: 'App\Entity\FFXIV'
                         alias: FFXIV
+            anime:
+                connection: anime
+                mappings:
+                    Anime:
+                        is_bundle: false
+                        dir: '%kernel.project_dir%/src/Entity/Anime'
+                        prefix: 'App\Entity\Anime'
+                        alias: Anime
+            leagueoflegends:
+                connection: leagueoflegends
+                mappings:
+                    LeagueOfLegends:
+                        is_bundle: false
+                        dir: '%kernel.project_dir%/src/Entity/LeagueOfLegends'
+                        prefix: 'App\Entity\LeagueOfLegends'
+                        alias: LeagueOfLegends
 
 framework:
     cache:
