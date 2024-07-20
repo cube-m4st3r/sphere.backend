@@ -18,13 +18,13 @@ class Item
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
-    #[ORM\Column(length: 999, nullable: true)]
+    #[ORM\Column(type: 'text', nullable: true)]
     private ?string $description = null;
 
-    #[ORM\Column]
+    #[ORM\Column(nullable: true)]
     private ?bool $isCollectable = null;
 
-    #[ORM\Column]
+    #[ORM\Column(nullable: true)]
     private ?bool $CanBeHQ = null;
 
     #[ORM\OneToMany(targetEntity: VislandRouteItem::class, mappedBy: 'Item')]

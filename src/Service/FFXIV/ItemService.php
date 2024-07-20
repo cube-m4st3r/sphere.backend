@@ -14,16 +14,28 @@ class ItemService
         $this->entityManager = $entityManager;
     }
 
-    public function saveItem(array $itemData): void
+    public function serialize_item(Item $item): array
+    {
+        return([
+            'id' => $item->getId(),
+            'name' => $item->getName(),
+            'description' => $item->getDescription(),
+            'isCollectable' => $item->isIsCollectable(),
+            'CanBeHQ' => $item->isCanBeHQ()
+        ]);
+    }
+
+    public function saveItem(array $itemData): ?Item
     {
         $item = new Item();
-        $item->setId($itemData['GamePatch']['ID']);
+        $item->setId($itemData['ID']);
         $item->setName($itemData['Name']);
         $item->setDescription($itemData['Description']);
         $item->setIsCollectable($itemData['IsCollectable']);
         $item->setCanBeHQ($itemData['CanBeHq']);
 
         $this->entityManager->persist($item);
-        $this->entityManager->flush();
+
+        return $item;
     }
 }
