@@ -9,6 +9,9 @@ use App\Entity\FFXIV\Item;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Serializer\SerializerInterface;
 use App\Service\Base\PasteBinService;
+use App\Entity\FFXIV\Location;
+use App\Entity\FFXIV\LocationMainArea;
+use App\Entity\FFXIV\LocationSubArea;
 
 class VislandService
 {
@@ -58,6 +61,7 @@ class VislandService
             'creator' => $creatorSerialized,
             'updater' => $updaterSerialized,
             'code' => $route->getRouteCode(),
+            'location' => $route->getLocation()
         ];
 
         // Serialize each VislandRouteItem associated with the route
@@ -154,6 +158,25 @@ class VislandService
         //$pastebinlink = $this->pasteBinService->create_paste($routeData['code'], "N");
         $pastebinlink = "TEMP";
         $route->setPasteBinLink($pastebinlink);
+
+        $location_mainArea = $this->entityManager->getRepository(LocationMainArea::class)
+        ->findOneBy([
+            'name' => $routeData["location"]["main_area"]
+        ]);
+
+        $location_subArea = $this->entityManager->getRepository(LocationSubArea::class)
+        ->findOneBy([
+            'name' => $routeData["location"]["sub_area"]
+        ]);
+
+        $location = new Location();
+        if ($location_mainArea instanceof LocationMainArea && $location_subArea instanceof LocationSubArea) {
+            $location->setMainArea($location_mainArea);
+            $location->setSubArea($location_subArea);
+            $route->setLocation($location);
+        } else {
+            throw new \Exception('Location not found');
+        }
 
 
         $this->entityManager->persist($route);

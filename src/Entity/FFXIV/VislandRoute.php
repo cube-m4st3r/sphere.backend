@@ -38,15 +38,19 @@ class VislandRoute
     #[ORM\ManyToOne(targetEntity: DiscordUser::class)]
     private ?DiscordUser $updater = null;
 
-    #[ORM\OneToMany(targetEntity: VislandRouteItem::class, mappedBy: 'Route')]
-    private Collection $VislandRouteItem;
+    #[ORM\OneToMany(targetEntity: VislandRouteItem::class, mappedBy: 'route')]
+    private Collection $vislandRouteItems;
 
     #[ORM\Column(type: Types::TEXT)]
     private ?string $routeCode = null;
 
+    #[ORM\ManyToOne(targetEntity: Location::class, inversedBy: 'vislandRoutes', cascade: ['persist'])]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Location $location = null;
+
     public function __construct()
     {
-        $this->Item = new ArrayCollection();
+        $this->vislandRouteItems = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -141,27 +145,27 @@ class VislandRoute
     /**
      * @return Collection<int, VislandRouteItem>
      */
-    public function getVislandRouteItem(): Collection
+    public function getVislandRouteItems(): Collection
     {
-        return $this->VislandRouteItem;
+        return $this->vislandRouteItems;
     }
 
-    public function addVislandRouteItem(VislandRouteItem $vislandrouteitem): static
+    public function addVislandRouteItem(VislandRouteItem $vislandRouteItem): static
     {
-        if (!$this->VislandRouteItem->contains($vislandrouteitem)) {
-            $this->VislandRouteItem->add($vislandrouteitem);
-            $vislandrouteitem->setRoute($this);
+        if (!$this->vislandRouteItems->contains($vislandRouteItem)) {
+            $this->vislandRouteItems->add($vislandRouteItem);
+            $vislandRouteItem->setRoute($this);
         }
 
         return $this;
     }
 
-    public function removeVislandRouteItem(VislandRouteItem $vislandrouteitem): static
+    public function removeVislandRouteItem(VislandRouteItem $vislandRouteItem): static
     {
-        if ($this->VislandRouteItem->removeElement($vislandrouteitem)) {
+        if ($this->vislandRouteItems->removeElement($vislandRouteItem)) {
             // set the owning side to null (unless already changed)
-            if ($vislandrouteitem->getRoute() === $this) {
-                $vislandrouteitem->setRoute(null);
+            if ($vislandRouteItem->getRoute() === $this) {
+                $vislandRouteItem->setRoute(null);
             }
         }
 
@@ -176,6 +180,18 @@ class VislandRoute
     public function setRouteCode(string $routeCode): static
     {
         $this->routeCode = $routeCode;
+
+        return $this;
+    }
+
+    public function getLocation(): ?Location
+    {
+        return $this->location;
+    }
+
+    public function setLocation(?Location $location): static
+    {
+        $this->location = $location;
 
         return $this;
     }
