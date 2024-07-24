@@ -51,7 +51,7 @@ class AnimeShow
 
     public function __construct()
     {
-        $this->animegenres = new ArrayCollection();
+        $this->animeshowgenres = new ArrayCollection();
         $this->animeshowthemes = new ArrayCollection();
     }
 
