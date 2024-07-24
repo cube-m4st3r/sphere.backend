@@ -85,3 +85,9 @@ services:
     App\Service\Anime\AnimeExtAPIService:
         class: App\Service\Anime\AnimeExtAPIService
         autowire: true
+
+    App\Command\FFXIV\InsertItemsCommand:
+        arguments:
+            $entityManager: '@doctrine.orm.ffxiv_entity_manager'
+        tags:
+            - { name: 'console.command' }
