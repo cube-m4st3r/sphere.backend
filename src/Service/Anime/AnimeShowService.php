@@ -13,13 +13,16 @@ use App\Entity\Anime\AnimeThemes;
 use App\Entity\Anime\AnimeGenres;
 use App\Entity\Anime\AnimeShowGenres;
 use App\Entity\Anime\AnimeShowThemes;
+use Symfony\Component\Serializer\SerializerInterface;
+use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 
 
 class AnimeShowService
 {
     public function __construct(
+        SerializerInterface $serializer
     ){
-
+        $this->serializer = $serializer;
     }
     
     public function filter_anime_data_by_title($dataset, $animeTitle): array
@@ -78,6 +81,43 @@ class AnimeShowService
         }
 
         return $anime_show;
+    }
+
+    public function deserialize($data): AnimeShow
+    {
+        if (is_array($data)) {
+            $json = json_encode($data);
+        } else {
+            $json = $data;
+        }
+
+        $genres = $data['animeshowgenres'];
+        $themes = $data['animeshowthemes'];
+        unset($data['animeshowgenres'], $data['animeshowthemes']);
+
+        $animeShow = $this->serializer->denormalize($data, AnimeShow::class, 'json', [
+            AbstractNormalizer::ALLOW_EXTRA_ATTRIBUTES => false,
+            AbstractNormalizer::CALLBACKS => [
+                'airedStart' => function ($value) {
+                    return \DateTime::createFromImmutable($value);
+                },
+                'airedEnd' => function ($value) {
+                    return \DateTime::createFromImmutable($value);
+                },
+            ],
+        ]);
+
+        foreach ($genres as $genreData) {
+            $genre = $this->serializer->denormalize($genreData, AnimeShowGenres::class, 'json');
+            $animeShow->addAnimeShowGenre($genre);
+        }
+
+        foreach ($themes as $themeData) {
+            $theme = $this->serializer->denormalize($themeData, AnimeShowThemes::class, 'json');
+            $animeShow->addAnimeShowTheme($theme);
+        }
+
+        return $animeShow;
     }
 
     public function serialize_anime_show(AnimeShow $show): array
