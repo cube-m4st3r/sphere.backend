@@ -27,8 +27,13 @@ services:
     Symfony\Component\Serializer\SerializerInterface: '@serializer'
     Symfony\Component\Serializer\Serializer:
         arguments:
-            $normalizers: ['@serializer.normalizer.object']
+            $normalizers: ['@serializer.normalizer.object', '@serializer.normalizer.datetime']
             $encoders: ['@serializer.encoder.json']
+
+    Symfony\Component\Serializer\Normalizer\DateTimeNormalizer:
+        arguments:
+            $defaultContext:
+                datetime_format: 'Y-m-d H:i:s'
 
     App\Service\FFXIV\ItemService:
         class: App\Service\FFXIV\ItemService
@@ -91,3 +96,7 @@ services:
             $entityManager: '@doctrine.orm.ffxiv_entity_manager'
         tags:
             - { name: 'console.command' }
+
+    #App\Service\Anime\AnimeShowService:
+    #    arguments:
+    #        $entityManager: '@doctrine.orm.anime_entity_manager'

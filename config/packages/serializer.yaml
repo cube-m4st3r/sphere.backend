@@ -1,3 +1,5 @@
 framework:
     serializer:
         enabled: true
+        default_context:
+            datetime_format: 'Y-m-d H:i:s'

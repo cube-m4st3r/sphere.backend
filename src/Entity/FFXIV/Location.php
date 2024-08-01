@@ -6,24 +6,35 @@ use App\Repository\FFXIV\LocationRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use ApiPlatform\Metadata\ApiResource;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: LocationRepository::class)]
+#[ApiResource(
+    normalizationContext: ['groups' => ['location:read']]
+)]
 class Location
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['location:read'])]
     private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'locations')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['location:read', 
+    'visland_route:read'])]
     private ?LocationMainArea $MainArea = null;
 
     #[ORM\ManyToOne(inversedBy: 'locations')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['location:read',
+    'visland_route:read'])]
     private ?LocationSubArea $SubArea = null;
 
     #[ORM\OneToMany(targetEntity: VislandRoute::class, mappedBy: 'location')]
+    #[Groups(['location:read'])]
     private Collection $vislandRoutes;
 
     public function __construct()

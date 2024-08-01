@@ -6,16 +6,25 @@ use App\Repository\FFXIV\LocationSubAreaRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use ApiPlatform\Metadata\ApiResource;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: LocationSubAreaRepository::class)]
+#[ApiResource(
+    normalizationContext: ['groups' => ['location_sub_area:read']]
+)]
 class LocationSubArea
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['location:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['location_sub_area:read', 
+    'location:read',
+    'visland_route:read'])]
     private ?string $name = null;
 
     #[ORM\OneToMany(targetEntity: Location::class, mappedBy: 'SubArea')]

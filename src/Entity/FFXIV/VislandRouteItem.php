@@ -4,22 +4,33 @@ namespace App\Entity\FFXIV;
 
 use App\Repository\FFXIV\VislandRouteItemRepository;
 use Doctrine\ORM\Mapping as ORM;
+use ApiPlatform\Metadata\ApiResource;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Serializer\Annotation\Ignore;
 
 #[ORM\Entity(repositoryClass: VislandRouteItemRepository::class)]
+#[ApiResource]
 class VislandRouteItem
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['visland_route:read',
+    'discord_user:read'])]
     private ?int $id = null;
 
-    #[ORM\ManyToOne(inversedBy: 'Route_id')]
+    #[ORM\ManyToOne(targetEntity: VislandRoute::class, inversedBy: 'vislandRouteItems')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?VislandRoute $Route = null;
+    #[Groups(['visland_route:read', 'visland_route:write',
+    'discord_user:read'])]
+    #[Ignore]
+    private ?VislandRoute $route = null;
 
-    #[ORM\ManyToOne(inversedBy: 'Item_id')]
+    #[ORM\ManyToOne(targetEntity: Item::class, inversedBy: 'vislandRouteItems')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Item $Item = null;
+    #[Groups(['visland_route:read', 'visland_route:write',
+    'discord_user:read'])]
+    private ?Item $item = null;
 
     public function getId(): ?int
     {
@@ -28,24 +39,24 @@ class VislandRouteItem
 
     public function getRoute(): ?VislandRoute
     {
-        return $this->Route;
+        return $this->route;
     }
 
-    public function setRoute(?VislandRoute $Route): static
+    public function setRoute(?VislandRoute $route): static
     {
-        $this->Route = $Route;
+        $this->route = $route;
 
         return $this;
     }
 
     public function getItem(): ?Item
     {
-        return $this->Item;
+        return $this->item;
     }
 
-    public function setItem(?Item $Item): static
+    public function setItem(?Item $item): static
     {
-        $this->Item = $Item;
+        $this->item = $item;
 
         return $this;
     }
